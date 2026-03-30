@@ -1,0 +1,135 @@
+{
+  "name": "Weekly_marketing_Data_Refresh",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "triggerAtDay": [
+                1
+              ],
+              "triggerAtHour": 8,
+              "triggerAtMinute": null
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "fdee5b6f-c4fb-465d-b05f-57b607ed01eb",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "fileSelector": "C:\\Users\\Admin/.n8n-files/orders_daily.csv",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "f367fb3b-2541-4788-8925-0100aab09362",
+      "name": "Read/Write Files from Disk"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT COUNT(*) FROM ads_combined;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        416,
+        0
+      ],
+      "id": "ec8dfe0c-e3fe-4d6a-bc63-f568105c70c4",
+      "name": "Execute a SQL query",
+      "credentials": {
+        "postgres": {
+          "id": "5VQq6jMGs65IJDp2",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "harshlmistry313@gmail.com",
+        "toEmail": "harshmistry2001@gmail.com",
+        "subject": "Markeitng report",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        624,
+        0
+      ],
+      "id": "5ab93998-3d87-4ac1-b30e-5d9a6ff9e95d",
+      "name": "Send an Email",
+      "webhookId": "abd9776e-4a0f-4a0e-89f4-ba5b94c76304",
+      "credentials": {
+        "smtp": {
+          "id": "NjGurPS8b9gAo00E",
+          "name": "SMTP account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read/Write Files from Disk": {
+      "main": [
+        [
+          {
+            "node": "Execute a SQL query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute a SQL query": {
+      "main": [
+        [
+          {
+            "node": "Send an Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "fd3b8b1a-ee1b-4bd6-95e1-8ec9056cc0a6",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c0bc8a13642685d86a5b5a385fd4718647152ba088fc70920f661381cbedc1e8"
+  },
+  "id": "j6RpZpiCvtg8bUAu",
+  "tags": []
+}
